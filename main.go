@@ -2,6 +2,7 @@ package main
 
 import (
 	"Sviluppo/go/go-fiber/router"
+	"log"
 
 	"Sviluppo/go/go-fiber/database"
 
@@ -19,5 +20,5 @@ func main() {
 
 	router.SetUpRoutes(app)
 
-	app.Listen(":3000")
+	log.Fatal(app.Listen(":3000"))
 }
