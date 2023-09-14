@@ -61,7 +61,7 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	type UserData struct {
-		ID       uuid.UUID `json:"type:uuid"`
+		ID       uuid.UUID `gorm:"type:uuid"`
 		Username string    `json:"username"`
 		Email    string    `json:"email"`
 		Password string    `json:"password"`

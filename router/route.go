@@ -31,4 +31,5 @@ func SetUpRoutes(app *fiber.App) {
 	product.Get("/:id", handler.GetProducById)
 	product.Post("/", middleware.Protected(), handler.CreateProduct)
 	product.Delete("/:id", middleware.Protected(), handler.DeleteProductByID)
+
 }
