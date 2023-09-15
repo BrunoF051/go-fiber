@@ -44,6 +44,42 @@ func CreateProduct(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"status": "success", "message": "Created product", "data": product})
 }
 
+func UpdateProduct(c *fiber.Ctx) error {
+
+	type UpdateProductStruct struct {
+		Title       string `json:"title" validate:"required, min=3"`
+		Description string `json:"description" validate:"required, min=10"`
+		Amount      int    `json:"amount" validate:"required, number"`
+		Price       int    `json:"price" validate:"number"`
+	}
+
+	db := database.DB.Db
+	var product models.Product
+	id := c.Params("id")
+
+	db.Find(&product, id)
+
+	if product.ID == uuid.Nil {
+		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "Product not found", "data": nil})
+	}
+
+	var updateProduct UpdateProductStruct
+
+	if err := c.BodyParser(&updateProduct); err != nil {
+		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Something's wrong with your input", "data": err})
+	}
+
+	product.Title = updateProduct.Title
+	product.Description = updateProduct.Description
+	product.Amount = updateProduct.Amount
+	product.Price = updateProduct.Price
+
+	db.Save(&product)
+
+	return c.Status(200).JSON(fiber.Map{"status": "success", "message": "Product Found", "data": product})
+
+}
+
 func DeleteProductByID(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DB.Db

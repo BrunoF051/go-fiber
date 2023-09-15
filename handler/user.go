@@ -59,7 +59,7 @@ func GetSingleUser(c *fiber.Ctx) error {
 
 func UpdateUser(c *fiber.Ctx) error {
 
-	type updateUser struct {
+	type UpdateUser struct {
 		Username string `json:"username"`
 	}
 
@@ -73,7 +73,7 @@ func UpdateUser(c *fiber.Ctx) error {
 		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "User not found", "data": nil})
 	}
 
-	var updaUserData updateUser
+	var updaUserData UpdateUser
 	err := c.BodyParser(&updaUserData)
 
 	if err != nil {
