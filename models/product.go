@@ -13,3 +13,8 @@ type Product struct {
 	Amount      int       `gorm:"not null" json:"amount"`
 	Price       int       `gorm:"not null" json:"price"`
 }
+
+func (product *Product) BeforeCreate(tx *gorm.DB) (err error) {
+	product.ID = uuid.New()
+	return
+}
