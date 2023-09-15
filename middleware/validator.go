@@ -18,7 +18,7 @@ func ValidateProdcut(c *fiber.Ctx) error {
 	var bodyReq ProductValidationStruct
 
 	if err := c.BodyParser(&bodyReq); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Could not validate data", "data": err.Error()})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "incorrect data", "data": err.Error()})
 	}
 
 	validate := validator.New()
@@ -41,7 +41,14 @@ func ValidateUser(c *fiber.Ctx) error {
 	var bodyReq userValidationStruc
 
 	if err := c.BodyParser(&bodyReq); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Can not validate user", "data": err.Error()})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "incorrect data", "data": err.Error()})
 	}
+
+	validate := validator.New()
+
+	if err := validate.Struct(bodyReq); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Can not validate data", "data": err.Error()})
+	}
+
 	return c.Next()
 }
