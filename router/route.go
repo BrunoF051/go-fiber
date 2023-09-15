@@ -22,7 +22,7 @@ func SetUpRoutes(app *fiber.App) {
 	user.Get("/", handler.GetAllUsers)
 	user.Get("/:id", handler.GetSingleUser)
 	user.Post("/", handler.CreateUser)
-	user.Patch(":id", middleware.Protected(), handler.UpdateUser)
+	user.Patch(":id", middleware.Protected(), middleware.ValidateUser(), handler.UpdateUser)
 	user.Delete("/:id", middleware.Protected(), handler.DeleteUserById)
 
 	// Product
@@ -30,7 +30,7 @@ func SetUpRoutes(app *fiber.App) {
 	product.Get("/", handler.GetAllProducts)
 	product.Get("/:id", handler.GetProducById)
 	product.Post("/", middleware.Protected(), handler.CreateProduct)
-	product.Patch("/:id", middleware.Protected(), handler.UpdateProduct)
+	product.Patch("/:id", middleware.Protected(), middleware.ValidateProdcut(), handler.UpdateProduct)
 	product.Delete("/:id", middleware.Protected(), handler.DeleteProductByID)
 
 }
