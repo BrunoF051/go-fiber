@@ -15,6 +15,11 @@ import (
 	"gorm.io/gorm"
 )
 
+func hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
 func CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
@@ -51,6 +56,48 @@ func getUserByUsername(u string) (*models.User, error) {
 func isEmail(email string) bool {
 	_, err := mail.ParseAddress(email)
 	return err == nil
+}
+
+func Register(c *fiber.Ctx) error {
+
+	type RegisterInput struct {
+		ID       uuid.UUID `gorm:"type:uuid"`
+		Username string    `json:"username"`
+		Email    string    `json:"email"`
+		Password string    `json:"password"`
+	}
+
+	register := new(RegisterInput)
+	db := database.DB.Db
+	var registerInput RegisterInput
+
+	if err := c.BodyParser(&register); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON((fiber.Map{"status": "error", "message": "Error on register request", "data": err.Error()}))
+	}
+
+	registerModel, err := new(models.User), *new(error)
+
+	if registerModel == nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "wrong input data", "data": err.Error()})
+	}
+
+	if hashPass, err := hashPassword(registerInput.Password); err != nil {
+		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't hash password", "errors": err.Error()})
+	} else {
+		registerModel.Password = hashPass
+	}
+
+	registerInput = RegisterInput{
+		Username: registerModel.Username,
+		Email:    registerModel.Email,
+		Password: registerModel.Password,
+	}
+
+	if err := db.Create(registerInput).Error; err != nil {
+		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't create user", "errors": err.Error()})
+	}
+
+	return c.JSON(fiber.Map{"status": "success", "message": "Created user", "data": registerInput.Username})
 }
 
 func Login(c *fiber.Ctx) error {

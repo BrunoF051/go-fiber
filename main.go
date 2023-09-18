@@ -16,9 +16,10 @@ func main() {
 
 	app := fiber.New()
 	app.Use(logger.New())
-	app.Use(cors.New())
 
 	router.SetUpRoutes(app)
+
+	app.Use(cors.New())
 
 	// 404 Handler
 	app.Use(func(c *fiber.Ctx) error {
