@@ -5,6 +5,7 @@ import (
 	"Sviluppo/go/go-fiber/database"
 	"Sviluppo/go/go-fiber/models"
 	"errors"
+	"log"
 	"net/mail"
 	"time"
 
@@ -61,43 +62,33 @@ func isEmail(email string) bool {
 func Register(c *fiber.Ctx) error {
 
 	type RegisterInput struct {
-		ID       uuid.UUID `gorm:"type:uuid"`
-		Username string    `json:"username"`
-		Email    string    `json:"email"`
-		Password string    `json:"password"`
+		Username string `json:"username"`
+		Email    string `json:"email"`
 	}
 
-	register := new(RegisterInput)
+	register := new(models.User)
 	db := database.DB.Db
-	var registerInput RegisterInput
 
 	if err := c.BodyParser(&register); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON((fiber.Map{"status": "error", "message": "Error on register request", "data": err.Error()}))
 	}
 
-	registerModel, err := new(models.User), *new(error)
-
-	if registerModel == nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "wrong input data", "data": err.Error()})
-	}
-
-	if hashPass, err := hashPassword(registerInput.Password); err != nil {
+	if hashPass, err := hashPassword(register.Password); err != nil {
 		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't hash password", "errors": err.Error()})
 	} else {
-		registerModel.Password = hashPass
+		register.Password = hashPass
 	}
 
-	registerInput = RegisterInput{
-		Username: registerModel.Username,
-		Email:    registerModel.Email,
-		Password: registerModel.Password,
-	}
-
-	if err := db.Create(registerInput).Error; err != nil {
+	if err := db.Create(register).Error; err != nil {
 		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't create user", "errors": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"status": "success", "message": "Created user", "data": registerInput.Username})
+	registerInput := RegisterInput{
+		Username: register.Username,
+		Email:    register.Email,
+	}
+
+	return c.JSON(fiber.Map{"status": "success", "message": "Created user", "data": registerInput})
 }
 
 func Login(c *fiber.Ctx) error {
@@ -140,6 +131,7 @@ func Login(c *fiber.Ctx) error {
 			Email:    userModel.Email,
 			Password: userModel.Password,
 		}
+		log.Println("found user", userData)
 	}
 
 	if !CheckPasswordHash(pass, userData.Password) {

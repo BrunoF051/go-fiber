@@ -48,7 +48,7 @@ func GetSingleUser(c *fiber.Ctx) error {
 
 	var user models.User
 
-	db.Find(&user, "id = ?", id)
+	db.First(&user, "id = ?", id)
 
 	if user.ID == uuid.Nil {
 		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "User not found", "data": nil})
