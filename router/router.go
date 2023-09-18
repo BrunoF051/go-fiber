@@ -16,6 +16,7 @@ func SetUpRoutes(app *fiber.App) {
 	// Auth
 	auth := api.Group("/auth")
 	auth.Post("/login", handler.Login)
+	auth.Post("/register", middleware.ValidateUser(), handler.Register)
 
 	// User
 	user := api.Group("/user")
