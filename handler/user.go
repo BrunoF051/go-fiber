@@ -61,6 +61,7 @@ func UpdateUser(c *fiber.Ctx) error {
 
 	type UpdateUser struct {
 		Username string `json:"username"`
+		Password string `json:"password"`
 	}
 
 	db := database.DB.Db
@@ -81,6 +82,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	}
 
 	user.Username = updaUserData.Username
+	user.Password = updaUserData.Password
 
 	db.Save(&user)
 
