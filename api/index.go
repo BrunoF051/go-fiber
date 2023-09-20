@@ -1,17 +1,27 @@
-package main
+package handler
 
 import (
+	"Sviluppo/go/go-fiber/database"
 	"Sviluppo/go/go-fiber/router"
 	"log"
-
-	"Sviluppo/go/go-fiber/database"
+	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/adaptor"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
-func main() {
+// Handler is the main entry point of the application. Think of it like the main() method
+func Handler(w http.ResponseWriter, r *http.Request) {
+	// This is needed to set the proper request path in `*fiber.Ctx`
+	r.RequestURI = r.URL.String()
+
+	handler().ServeHTTP(w, r)
+}
+
+func handler() http.HandlerFunc {
+
 	database.ConnectDb()
 
 	app := fiber.New()
@@ -28,4 +38,6 @@ func main() {
 	})
 
 	log.Fatal(app.Listen(":3000"))
+
+	return adaptor.FiberApp(app)
 }
