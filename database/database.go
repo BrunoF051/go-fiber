@@ -28,7 +28,7 @@ func ConnectDb() {
 	// dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=Europe/Rome", config.Config("POSTGRES_HOST"), config.Config("POSTGRES_USER"), config.Config("POSTGRES_PASSWORD"), config.Config("POSTGRES_DATABASE"), port)
 	dsn := config.Config("POSTGRES_URL")
 
-	db, err := gorm.Open(postgres.Open(dsn+"?sslmode=require"), &gorm.Config{
+	db, err := gorm.Open(postgres.Open(dsn+"?sslmode=require options=endpoint%3Dep-mute-recipe-123456"), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 	})
 
