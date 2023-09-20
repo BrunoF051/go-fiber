@@ -16,8 +16,9 @@ func main() {
 
 	app := fiber.New()
 	app.Use(logger.New())
-	app.Static("/", "./public")
 	router.SetUpRoutes(app)
+
+	app.Static("/", "./public")
 
 	app.Use(cors.New())
 
