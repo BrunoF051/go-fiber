@@ -16,10 +16,10 @@ func main() {
 
 	app := fiber.New()
 	app.Use(logger.New())
-	router.SetUpRoutes(app)
 
 	app.Static("/", "./public")
 
+	router.SetUpRoutes(app)
 	app.Use(cors.New())
 
 	// 404 Handler
