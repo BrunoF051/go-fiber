@@ -40,7 +40,7 @@ func ValidateUser() fiber.Handler {
 		type userValidationStruc struct {
 			ID       uuid.UUID `gorm:"type:uuid; validate: uuid"`
 			Username string    `json:"username" validate:"min=4,max=12"`
-			Email    string    `json:"email" validate:"email"`
+			Email    string    `json:"email" validate:"omitempty,email"`
 			Password string    `json:"password" validate:"min=4"`
 		}
 
@@ -50,7 +50,7 @@ func ValidateUser() fiber.Handler {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "incorrect data", "data": err.Error()})
 		}
 
-		validate := validator.New(validator.WithRequiredStructEnabled())
+		validate := validator.New()
 
 		if err := validate.Struct(bodyReq); err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Can not validate data", "data": err.Error()})

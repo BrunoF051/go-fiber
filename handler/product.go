@@ -47,9 +47,9 @@ func CreateProduct(c *fiber.Ctx) error {
 func UpdateProduct(c *fiber.Ctx) error {
 
 	type UpdateProductStruct struct {
-		Title       string `json:"title" validate:"required, min=3"`
-		Description string `json:"description" validate:"required, min=10"`
-		Amount      int    `json:"amount" validate:"required, number"`
+		Title       string `json:"title" validate:"min=3"`
+		Description string `json:"description" validate:"min=5"`
+		Amount      int    `json:"amount" validate:"number"`
 		Price       int    `json:"price" validate:"number"`
 	}
 
@@ -57,7 +57,7 @@ func UpdateProduct(c *fiber.Ctx) error {
 	var product models.Product
 	id := c.Params("id")
 
-	db.Find(&product, id)
+	db.Find(&product, "id = ?", id)
 
 	if product.ID == uuid.Nil {
 		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "Product not found", "data": nil})
@@ -85,7 +85,7 @@ func DeleteProductByID(c *fiber.Ctx) error {
 	db := database.DB.Db
 	var product models.Product
 
-	db.First(&product, id)
+	db.First(&product, "id = ?", id)
 
 	if product.ID == uuid.Nil {
 		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "No product found with ID", "data": nil})
