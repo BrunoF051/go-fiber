@@ -31,7 +31,7 @@ func ConnectDb() {
 
 	dsn := config.Config("DATABASE_URL")
 
-	db, err := gorm.Open(postgres.Open(dsn+"?options=endpoint%3D<endpoint-id>"), &gorm.Config{
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 	})
 
