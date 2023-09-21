@@ -3,10 +3,25 @@ package handler
 import (
 	"Sviluppo/go/go-fiber/database"
 	"Sviluppo/go/go-fiber/models"
+	"errors"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
+
+func getProductByTitle(t string) (*models.Product, error) {
+	db := database.DB.Db
+	var product models.Product
+
+	if err := db.Where(&models.Product{Title: t}).Find(&product).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &product, nil
+}
 
 func GetAllProducts(c *fiber.Ctx) error {
 	db := database.DB.Db
@@ -37,6 +52,10 @@ func CreateProduct(c *fiber.Ctx) error {
 
 	if err := c.BodyParser(product); err != nil {
 		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't create product", "data": err})
+	}
+
+	if existTitle, _ := getUserByEmail(product.Title); existTitle.Email != "" {
+		return c.Status(400).JSON(fiber.Map{"status": "error", "message": "This Title already exists", "data": product.Title})
 	}
 
 	db.Create(&product)
