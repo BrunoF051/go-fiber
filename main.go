@@ -1,26 +1,17 @@
-package handler
+package main
 
 import (
-	"Sviluppo/go/go-fiber/database"
 	"Sviluppo/go/go-fiber/router"
 	"log"
-	"net/http"
+
+	"Sviluppo/go/go-fiber/database"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/adaptor"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
-func Handler(w http.ResponseWriter, r *http.Request) {
-
-	r.RequestURI = r.URL.String()
-
-	handler().ServeHTTP(w, r)
-}
-
-func handler() http.HandlerFunc {
-
+func main() {
 	database.ConnectDb()
 
 	app := fiber.New()
@@ -37,6 +28,4 @@ func handler() http.HandlerFunc {
 	})
 
 	log.Fatal(app.Listen(":3000"))
-
-	return adaptor.FiberApp(app)
 }

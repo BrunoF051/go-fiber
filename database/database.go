@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -19,15 +20,13 @@ type Dbinstance struct {
 var DB Dbinstance
 
 func ConnectDb() {
-	// p := config.Config("POSTGRES_PORT")
-	// port, err := strconv.ParseUint(p, 10, 32)
-	// if err != nil {
-	// 	fmt.Println("Error parsing str to int")
-	// }
+	p := config.Config("POSTGRES_PORT")
+	port, err := strconv.ParseUint(p, 10, 32)
+	if err != nil {
+		fmt.Println("Error parsing str to int")
+	}
 
-	// dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=Europe/Rome", config.Config("POSTGRES_HOST"), config.Config("POSTGRES_USER"), config.Config("POSTGRES_PASSWORD"), config.Config("POSTGRES_DATABASE"), port)
-
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=require TimeZone=Eu/Central cluster=%s", config.Config("PGHOST"), config.Config("PGUSER"), config.Config("PGPASSWORD"), config.Config("PGDATABASE"), config.Config("PGENDPOINT"))
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=Europe/Rome", config.Config("POSTGRES_HOST"), config.Config("POSTGRES_USER"), config.Config("POSTGRES_PASSWORD"), config.Config("POSTGRES_DATABASE"), port)
 
 	// dsn := config.Config("DATABASE_URL")
 
