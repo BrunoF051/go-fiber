@@ -72,6 +72,14 @@ func Register(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON((fiber.Map{"status": "error", "message": "Error on register request", "data": err.Error()}))
 	}
 
+	if existName, _ := getUserByUsername(register.Username); existName.Username != "" {
+		return c.Status(400).JSON(fiber.Map{"status": "error", "message": "This Username already exists", "data": register.Username})
+	}
+
+	if existEmail, _ := getUserByEmail(register.Email); existEmail.Email != "" {
+		return c.Status(400).JSON(fiber.Map{"status": "error", "message": "This Email already exists", "data": register.Email})
+	}
+
 	if hashPass, err := hashPassword(register.Password); err != nil {
 		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't hash password", "errors": err.Error()})
 	} else {
