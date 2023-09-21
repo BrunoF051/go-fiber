@@ -18,7 +18,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	handler().ServeHTTP(w, r)
 }
 
-// building the fiber application
 func handler() http.HandlerFunc {
 	database.ConnectDb()
 
