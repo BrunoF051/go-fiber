@@ -21,10 +21,6 @@ func CheckId() fiber.Handler {
 
 		claims := token.Claims.(jwt.MapClaims)
 
-		if claims["user_role"] == "" {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Ask for a user role to Alessandro", "data": nil})
-		}
-
 		if claims["user_id"] != id {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "You can only edit your profile", "data": nil})
 		}
