@@ -33,7 +33,7 @@ func CheckRole() fiber.Handler {
 		token, err := jwt.Parse(tokenString, jwtKeyFunc)
 
 		if err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failing chicking the role", "data": tokenString})
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failing chicking the role", "data": err.Error()})
 		}
 
 		claims := token.Claims.(jwt.MapClaims)
