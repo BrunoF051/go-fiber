@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"Sviluppo/go/go-fiber/config"
+	"log"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -29,7 +30,7 @@ func CheckRole() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 
 		onlyToken := extractToken(c)
-
+		log.Println("OnlyToken", onlyToken)
 		token, err := jwt.Parse(onlyToken, jwtKeyFunc)
 
 		if err != nil {
