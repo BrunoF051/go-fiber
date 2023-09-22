@@ -9,7 +9,7 @@ import (
 )
 
 func jwtKeyFunc(token *jwt.Token) (interface{}, error) {
-	return config.Config(("SECRET")), nil
+	return []byte(config.Config(("SECRET"))), nil
 }
 
 func extractToken(c *fiber.Ctx) string {
