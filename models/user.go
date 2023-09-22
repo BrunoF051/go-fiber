@@ -22,3 +22,10 @@ func (user *User) BeforeCreate(tx *gorm.DB) (err error) {
 	user.ID = uuid.New()
 	return
 }
+
+func (u *User) AfterFind(tx *gorm.DB) (err error) {
+	if u.Role == "" {
+		u.Role = "user"
+	}
+	return
+}
