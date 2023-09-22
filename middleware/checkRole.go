@@ -37,6 +37,9 @@ func CheckRole() fiber.Handler {
 		}
 
 		claims := token.Claims.(jwt.MapClaims)
+		if claims["user_role"] == "" {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Ask for a user role to Alessandro", "data": nil})
+		}
 
 		if claims["user_role"] != "admin" {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Only users with 'admin' role can do that", "data": err.Error()})
