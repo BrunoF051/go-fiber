@@ -12,21 +12,25 @@ func jwtKeyFunc(token *jwt.Token) (interface{}, error) {
 	return config.Config(("SECRET")), nil
 }
 
+func extractToken(c *fiber.Ctx) string {
+	bearToken := c.Get("Authorization")
+
+	// Normally Authorization HTTP header.
+	onlyToken := strings.Split(bearToken, " ")
+	if len(onlyToken) == 2 {
+		return onlyToken[1]
+	}
+
+	return ""
+}
+
 func CheckRole() fiber.Handler {
 
 	return func(c *fiber.Ctx) error {
 
-		bearToken := c.Get("Authorization")
+		onlyToken := extractToken(c)
 
-		onlyToken := strings.Split(bearToken, "")
-
-		if len(onlyToken) == 2 {
-			bearToken = onlyToken[1]
-		} else if len(onlyToken) == 0 {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Auth token not found", "data": nil})
-		}
-
-		token, err := jwt.Parse(bearToken, jwtKeyFunc)
+		token, err := jwt.Parse(onlyToken, jwtKeyFunc)
 
 		if err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failing chicking the role", "data": nil})
