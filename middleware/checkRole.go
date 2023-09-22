@@ -33,13 +33,13 @@ func CheckRole() fiber.Handler {
 		token, err := jwt.Parse(onlyToken, jwtKeyFunc)
 
 		if err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failing chicking the role", "data": nil})
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Failing chicking the role", "data": err.Error()})
 		}
 
 		claims := token.Claims.(jwt.MapClaims)
 
 		if claims["role"] != "admin" {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Only users with 'admin' role can do that", "data": nil})
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Only users with 'admin' role can do that", "data": err.Error()})
 		}
 		return c.Next()
 	}
