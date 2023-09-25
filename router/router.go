@@ -23,8 +23,8 @@ func SetUpRoutes(app *fiber.App) {
 	user.Get("/", handler.GetAllUsers)
 	user.Get("/:id", handler.GetSingleUser)
 	user.Post("/", middleware.Protected(), middleware.ValidateUser(), middleware.CheckRole(), handler.CreateUser)
-	user.Patch(":id", middleware.Protected(), middleware.ValidateUser(), middleware.CheckId(), handler.UpdateUser)
-	user.Delete("/:id", middleware.Protected(), middleware.CheckId(), handler.DeleteUserById)
+	user.Patch(":id", middleware.Protected(), middleware.ValidateUser(), handler.UpdateUser)
+	user.Delete("/:id", middleware.Protected(), handler.DeleteUserById)
 
 	// Product
 	product := api.Group("/product")
