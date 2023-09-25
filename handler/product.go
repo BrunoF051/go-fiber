@@ -54,9 +54,9 @@ func CreateProduct(c *fiber.Ctx) error {
 		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't create product", "data": err})
 	}
 
-	if existTitle, _ := getUserByEmail(product.Title); existTitle.Email != "" {
-		return c.Status(400).JSON(fiber.Map{"status": "error", "message": "This Title already exists", "data": product.Title})
-	}
+	// if existTitle, _ := getUserByEmail(product.Title); existTitle.Email != "" {
+	// 	return c.Status(400).JSON(fiber.Map{"status": "error", "message": "This Title already exists", "data": product.Title})
+	// }
 
 	db.Create(&product)
 
